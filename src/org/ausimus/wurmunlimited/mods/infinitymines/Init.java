@@ -5,12 +5,20 @@ import javassist.bytecode.Descriptor;
 import org.gotti.wurmunlimited.modloader.classhooks.HookException;
 import org.gotti.wurmunlimited.modloader.classhooks.HookManager;
 import org.gotti.wurmunlimited.modloader.interfaces.PreInitable;
+import org.gotti.wurmunlimited.modloader.interfaces.ServerStartedListener;
 import org.gotti.wurmunlimited.modloader.interfaces.WurmServerMod;
+import org.gotti.wurmunlimited.modsupport.actions.ModActions;
 
+public class Init implements WurmServerMod, PreInitable, ServerStartedListener{
 
-public class Init implements WurmServerMod, PreInitable {
+    @Override
+    public void onServerStarted () {
+        ModActions.registerAction(new AttachWideDoor());
+    }
+
     @Override
     public void preInit() {
+        ModActions.init();
         try {
             CtClass[] parametersWT = {
                     HookManager.getInstance().getClassPool().get("com.wurmonline.server.creatures.Creature"),
